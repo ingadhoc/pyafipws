@@ -37,7 +37,13 @@ import mimetypes
 from email.generator import _make_boundary
 from html.parser import HTMLParser
 from http.cookies import SimpleCookie
-from configparser import SafeConfigParser
+try:
+    from ConfigParser import SafeConfigParser
+except ImportError:
+    # python3 workaround to read config files not in utf8
+    from configparser import ConfigParser as SafeConfigParser
+    import codecs
+    SafeConfigParser.read = lambda self, filename: self.read_file(codecs.open(filename, "r", "latin1"))
 
 from pysimplesoap.client import SimpleXMLElement, SoapClient, SoapFault, parse_proxy, set_http_wrapper
 from pkg_resources import parse_version
