@@ -17,11 +17,11 @@ __copyright__ = "Copyright (C) 2010 Mariano Reingart"
 __license__ = "LGPL 3.0"
 __version__ = "1.01b"
 
-from hashlib import md5
-import os
-import sys
-import tempfile
-import traceback
+import os, sys, tempfile, traceback
+try:
+    from hashlib import md5
+except ImportError:
+    from md5 import md5
 from pysimplesoap.simplexml import SimpleXMLElement
 
 from .utils import WebClient
@@ -112,7 +112,8 @@ class IIBB:
                 response = self.client(user=self.Usuario, password=self.Password,
                                        file=archivo)
             else:
-                response = open(self.testing).read()
+                with open(self.testing) as archivo:
+                    response = archivo.read()
             self.XmlResponse = response
             self.xml = SimpleXMLElement(response)
             if 'tipoError' in self.xml:

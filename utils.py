@@ -28,7 +28,7 @@ import stat
 import time
 import traceback
 import warnings
-from io import StringIO
+from io import StringIO, BytesIO
 from decimal import Decimal
 from urllib.parse import urlencode
 from urllib.parse import urlparse
@@ -435,10 +435,20 @@ class WebClient:
     def multipart_encode(self, vars):
         "Enconde form data (vars dict)"
         boundary = choose_boundary()
-        buf = StringIO()
+        if sys.version_info[0] < 3:
+            buf = BytesIO()
+
+            def _is_string(val):
+                return (not isinstance(val, file))
+        else:
+            buf = StringIO()
+
+            def _is_string(val):
+                return isinstance(val, str)
+
         for key, value in list(vars.items()):
-            if not isinstance(value, IOBase):
-                buf.write('--%s\r\n' % boundary)
+            if _is_string(value):
+                buf.write("--%s\r\n" % boundary)
                 buf.write('Content-Disposition: form-data; name="%s"' % key)
                 buf.write('\r\n\r\n' + value + '\r\n')
             else:
