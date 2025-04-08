@@ -101,14 +101,12 @@ class IIBB:
             self.xml.contribuyentes.contribuyente.cuitContribuyente = cuit_contribuyente
 
             xml = self.xml.as_xml()
-            self.CodigoHash = md5(xml).hexdigest()
+            self.CodigoHash = md5(xml.encode('utf-8')).hexdigest()
             nombre = "DFEServicioConsulta_%s.xml" % self.CodigoHash
 
             # guardo el xml en el archivo a enviar y luego lo re-abro:
-            archivo = open(os.path.join(tempfile.gettempdir(), nombre), "w")
-            archivo.write(xml.decode("utf8"))
-            archivo.close()
-            archivo = open(os.path.join(tempfile.gettempdir(), nombre), "r")
+            with open(os.path.join(tempfile.gettempdir(), nombre), "w") as archivo:
+                archivo.write(xml)
 
             if not self.testing:
                 response = self.client(user=self.Usuario, password=self.Password,
@@ -120,8 +118,11 @@ class IIBB:
             if 'tipoError' in self.xml:
                 self.TipoError = str(self.xml.tipoError)
                 self.CodigoError = str(self.xml.codigoError)
-                self.MensajeError = str(self.xml.mensajeError)
-            if 'numeroComprobante' in self.xml:
+                self.MensajeError = (
+                    str(self.xml.mensajeError)
+                    .encode("ascii", "replace")
+                )
+            if "numeroComprobante" in self.xml:
                 self.NumeroComprobante = str(self.xml.numeroComprobante)
                 self.CantidadContribuyentes = int(self.xml.cantidadContribuyentes)
                 if 'contribuyentes' in self.xml:
