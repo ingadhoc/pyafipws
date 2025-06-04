@@ -105,7 +105,7 @@ class COT(object):
                 self.Excepcion = "Archivo no encontrado: %s" % filename
                 return False
 
-            archivo = open(filename, "rb")
+            archivo = open(filename, "r")
             if not testing:
                 response = self.client(
                     user=self.Usuario, password=self.Password, file=archivo
