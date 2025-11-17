@@ -62,7 +62,7 @@ setup(
         "httplib2>=0.20.4;python_version > '3'",
         "pysimplesoap==1.08.14;python_version <= '2.7'",
         "pysimplesoap==1.8.22;python_version > '3' and python_version < '3.12'",
-        "git+http://github.com/pysimplesoap/pysimplesoap@py311; python_version >= '3.12'"
+        "git+http://github.com/pysimplesoap/pysimplesoap@py311; python_version >= '3.12'",
         "cryptography==3.3.2;python_version <= '2.7'",
         "cryptography>=3.4.7;python_version > '3'",
         "Pillow>=2.0.0",
