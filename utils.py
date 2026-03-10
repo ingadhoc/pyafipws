@@ -574,7 +574,10 @@ class WebClient(object):
                 buf.write("Content-Type: %s\r\n" % contenttype)
                 # buffer += 'Content-Length: %s\r\n' % file_size
                 fd.seek(0)
-                buf.write("\r\n" + fd.read() + "\r\n")
+                contenido = fd.read()
+                if isinstance(contenido, bytes):
+                    contenido = contenido.decode('latin-1')
+                buf.write("\r\n" + contenido + "\r\n")
         buf.write("--" + boundary + "--\r\n\r\n")
         buf = buf.getvalue()
         return boundary, buf
