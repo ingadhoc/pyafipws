@@ -145,7 +145,6 @@ class COT(object):
                                     (
                                         str(error.codigo),
                                         str(error.descripcion)
-                                        .decode("latin1")
                                         .encode("ascii", "replace"),
                                     )
                                 )

@@ -286,12 +286,12 @@ class BaseWS(object):
             else:
                 proxy_dict = parse_proxy(proxy)
                 self.log("Proxy Dict: %s" % str(proxy_dict))
-            if self.HOMO or not wsdl:
+            if not wsdl:
                 wsdl = self.WSDL
             # agregar sufijo para descargar descripción del servicio ?WSDL o ?wsdl
             if not wsdl.endswith(self.WSDL[-5:]) and wsdl.startswith("http"):
                 wsdl += self.WSDL[-5:]
-            if not cache or self.HOMO:
+            if not cache:
                 # use 'cache' from installation base directory
                 cache = os.path.join(self.InstallDir, "cache")
             # deshabilitar verificación cert. servidor si es nulo falso vacio
@@ -574,7 +574,10 @@ class WebClient(object):
                 buf.write("Content-Type: %s\r\n" % contenttype)
                 # buffer += 'Content-Length: %s\r\n' % file_size
                 fd.seek(0)
-                buf.write("\r\n" + fd.read() + "\r\n")
+                contenido = fd.read()
+                if isinstance(contenido, bytes):
+                    contenido = contenido.decode('latin-1')
+                buf.write("\r\n" + contenido + "\r\n")
         buf.write("--" + boundary + "--\r\n\r\n")
         buf = buf.getvalue()
         return boundary, buf
